@@ -12,13 +12,13 @@ public class BallsCreator {
 
     Bingo bingo;
 
-    public Map<Integer, Ball> createBalls() {
+    public Map<Integer, Ball> createBalls(Bingo bingo) {
 
         this.bingo = bingo;
 
         Map<Integer, Ball> tempMap = new HashMap<>();
         for (int i=1; i<=99; i++) {
-            Ball newBall = new Ball(i, false);
+            Ball newBall = new Ball(null, i, false, bingo);
             tempMap.put(i, newBall);
         }
         return tempMap;
