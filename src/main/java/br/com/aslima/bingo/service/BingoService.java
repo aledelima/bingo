@@ -38,18 +38,17 @@ public class BingoService {
         Bingo bingo = findById(bingoId);
         BallsRaffle raffle = new BallsRaffle(bingo);
         Integer number = raffle.raffleBall().getNumber();
-        System.out.println(number);
         bingo.updateDrawnBalls(number);
         bingoRepo.save(bingo);
     }
 
-    public Player purchaseCard(Integer bingoId, Integer playerId) {
+    public void purchaseCard(Integer bingoId, Integer playerId) {
         Bingo bingo = this.findById(bingoId);
         Player player = playerService.findById(playerId);
 
         //Checks if there's anough money to buy the new ticket
         if (player.getMoney().compareTo(bingo.getTicketPrice())==-1)
-            throw new IllegalArgumentException("Not enough balance to purchase");
+            throw new IllegalArgumentException("Not enough balance available.");
 
         CardCreator cardCreator = new CardCreator(bingo, player);
         Card card = cardCreator.createCardBalls();
@@ -57,8 +56,8 @@ public class BingoService {
 
         //Subtract ticket price from player balance
         player.setMoney(player.getMoney().subtract(bingo.getTicketPrice()));
-        return playerService.update(player);
-
+//        player.addCard(card);
+        playerService.update(player);
     }
 
 }

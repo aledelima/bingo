@@ -27,6 +27,11 @@ public class BingoController {
         return bingoService.listAll();
     }
 
+    @GetMapping("/{id}")
+    public Bingo findById(@PathVariable Integer id) {
+        return bingoService.findById(id);
+    }
+
     @PostMapping
     public Bingo create(@RequestBody BingoNewDTO dto) {
         return bingoService.create(dto.toBingo());
@@ -39,8 +44,9 @@ public class BingoController {
     }
 
     @PostMapping("/{bingoId}/player/{playerId}/purchaseCard")
-    public ResponseEntity<Player> purchaseCard(@PathVariable Integer bingoId, @PathVariable Integer playerId) {
-        return ResponseEntity.ok().body(bingoService.purchaseCard(bingoId, playerId));
+    public ResponseEntity<Void> purchaseCard(@PathVariable Integer bingoId, @PathVariable Integer playerId) {
+        bingoService.purchaseCard(bingoId, playerId);
+        return ResponseEntity.ok().build();
     }
 
 }

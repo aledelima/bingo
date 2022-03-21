@@ -1,5 +1,6 @@
 package br.com.aslima.bingo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,30 +13,27 @@ import java.util.List;
 @Data
 public class Card {
 
-    @EmbeddedId
-    private CardId id;
+//    @EmbeddedId
+//    private CardId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne
+    @JsonBackReference
+    private Bingo bingo;
+    @ManyToOne
+    @JsonBackReference
+    private Player player;
     @ManyToMany
-    List<Ball> balls = new ArrayList<>();
+    private List<Ball> balls = new ArrayList<>();
 
     public Card(Bingo bingo, Player player) {
-        this.id.setBingo(bingo);
-        this.id.setPlayer(player);
+        this.bingo = bingo;
+        this.player = player;
     }
 
     public void setBingo(Bingo bingo) {
-        this.id.setBingo(bingo);
-    }
-
-    public void setPlayer(Player player) {
-        this.id.setPlayer(player);
-    }
-
-    public Bingo getBingo() {
-        return id.getBingo();
-    }
-
-    public Player getPlayer() {
-        return id.getPlayer();
+        this.setBingo(bingo);
     }
 
     public Card addBall(Ball ball) {

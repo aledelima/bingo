@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class PlayerChargeValueDto {
 
-    private Integer playerId;
+    private Integer id;
     private Double value;
 
 }

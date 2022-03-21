@@ -33,6 +33,6 @@ public class PlayerController {
 
     @PostMapping("/recharge")
     public ResponseEntity<Player> chargeValue(@RequestBody PlayerChargeValueDto dto) {
-        return ResponseEntity.ok().body(playerService.chargeValue(dto.getPlayerId(), dto.getValue()));
+        return ResponseEntity.ok().body(playerService.chargeValue(dto.getId(), dto.getValue()));
     }
 }
