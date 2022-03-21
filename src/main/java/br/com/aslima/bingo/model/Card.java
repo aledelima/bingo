@@ -6,15 +6,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @NoArgsConstructor
 @Data
 public class Card {
 
-//    @EmbeddedId
-//    private CardId id;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,18 +26,18 @@ public class Card {
     private Player player;
     @ManyToMany
     private List<Ball> balls = new ArrayList<>();
+//    private Map<Integer, Ball> balls = new HashMap<>();
+    private Integer ballsFulfilled = 0;
+    private Boolean fulfilled = false;
 
     public Card(Bingo bingo, Player player) {
         this.bingo = bingo;
         this.player = player;
     }
 
-    public void setBingo(Bingo bingo) {
-        this.setBingo(bingo);
-    }
-
     public Card addBall(Ball ball) {
         this.balls.add(ball);
+//        this.balls.put(ball.getNumber(), ball);
         return this;
     }
 }

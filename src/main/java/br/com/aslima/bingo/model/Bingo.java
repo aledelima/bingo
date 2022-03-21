@@ -7,7 +7,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,14 +37,20 @@ public class Bingo {
     private Status status;
     @ManyToMany
     private List<Player> players = new ArrayList<>();
-    @JsonManagedReference
-    @OneToMany(mappedBy = "bingo",  cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @Getter
     @Setter
     private Map<Integer, Ball> balls = new HashMap<>();
     @OneToMany(mappedBy = "bingo")
     @JsonManagedReference
+    @Getter
+    @Setter
     private List<Card> cards = new ArrayList<>();
+    @Getter
+    @Setter
+    private Integer ballSequence = 0;
+    @ManyToMany
+    private List<Player> winners = new ArrayList<>();
 
     public Bingo(Integer id, LocalDate date, String description, BigDecimal ticketPrice) {
         this.id = id;
@@ -56,11 +61,26 @@ public class Bingo {
         balls = ballsCreator.createBalls(this);
     }
 
-    public Map<Integer, Ball> updateDrawnBalls(Integer ballNumber) {
-        if (balls.containsKey(ballNumber)) {
-            balls.get(ballNumber).setDrawn(true);
-        }
+    public Map<Integer, Ball> updateDrawnBalls(Ball shaffledBall, Integer sequence) {
+        shaffledBall.setDrawn(true);
+        shaffledBall.setSequence(sequence);
         return balls;
     }
 
+    public void addWinner(Player player) {
+        winners.add(player);
+    }
+
+    public void fulfillCards(Ball raffledBall) {
+        for (Card card: this.getCards()) {
+            if (card.getBalls().contains(raffledBall)) {
+                card.setBallsFulfilled(card.getBallsFulfilled() + 1);
+                if (card.getBallsFulfilled() >= 24) {
+                    this.addWinner(card.getPlayer());
+                    card.setFulfilled(true);
+                    this.setStatus(Status.FINISHED);
+                }
+            }
+        }
+    }
 }

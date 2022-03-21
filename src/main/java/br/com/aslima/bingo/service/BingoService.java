@@ -1,5 +1,6 @@
 package br.com.aslima.bingo.service;
 
+import br.com.aslima.bingo.model.Ball;
 import br.com.aslima.bingo.model.Bingo;
 import br.com.aslima.bingo.model.Card;
 import br.com.aslima.bingo.model.Player;
@@ -36,9 +37,13 @@ public class BingoService {
 
     public void raffle(Integer bingoId) {
         Bingo bingo = findById(bingoId);
-        BallsRaffle raffle = new BallsRaffle(bingo);
-        Integer number = raffle.raffleBall().getNumber();
-        bingo.updateDrawnBalls(number);
+        Ball raffledBall = (new BallsRaffle(bingo)).raffleBall();
+        bingo.setBallSequence(bingo.getBallSequence()+1);
+        raffledBall.setSequence(bingo.getBallSequence());
+//        BallsRaffle raffle = new BallsRaffle(bingo);
+//        Integer number = raffledBall.getNumber();
+        bingo.updateDrawnBalls(raffledBall, bingo.getBallSequence());
+        bingo.fulfillCards(raffledBall);
         bingoRepo.save(bingo);
     }
 

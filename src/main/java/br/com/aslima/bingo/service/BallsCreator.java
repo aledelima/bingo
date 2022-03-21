@@ -18,7 +18,7 @@ public class BallsCreator {
 
         Map<Integer, Ball> tempMap = new HashMap<>();
         for (int i=1; i<=99; i++) {
-            Ball newBall = new Ball(null, i, false, bingo);
+            Ball newBall = new Ball(null, i, false, null);
             tempMap.put(i, newBall);
         }
         return tempMap;
