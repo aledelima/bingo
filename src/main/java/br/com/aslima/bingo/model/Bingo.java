@@ -49,6 +49,9 @@ public class Bingo {
     @Getter
     @Setter
     private Integer ballSequence = 0;
+    @Getter
+    @Setter
+    @JsonManagedReference
     @ManyToMany
     private List<Player> winners = new ArrayList<>();
 

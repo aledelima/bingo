@@ -35,7 +35,7 @@ public class BingoService {
         return bingoRepo.save(bingo);
     }
 
-    public void raffle(Integer bingoId) {
+    public Ball raffle(Integer bingoId) {
         Bingo bingo = findById(bingoId);
         Ball raffledBall = (new BallsRaffle(bingo)).raffleBall();
         bingo.setBallSequence(bingo.getBallSequence()+1);
@@ -45,9 +45,10 @@ public class BingoService {
         bingo.updateDrawnBalls(raffledBall, bingo.getBallSequence());
         bingo.fulfillCards(raffledBall);
         bingoRepo.save(bingo);
+        return raffledBall;
     }
 
-    public void purchaseCard(Integer bingoId, Integer playerId) {
+    public Card purchaseCard(Integer bingoId, Integer playerId) {
         Bingo bingo = this.findById(bingoId);
         Player player = playerService.findById(playerId);
 
@@ -57,12 +58,13 @@ public class BingoService {
 
         CardCreator cardCreator = new CardCreator(bingo, player);
         Card card = cardCreator.createCardBalls();
-        cardRepo.save(card);
+        card = cardRepo.save(card);
 
         //Subtract ticket price from player balance
         player.setMoney(player.getMoney().subtract(bingo.getTicketPrice()));
 //        player.addCard(card);
         playerService.update(player);
+        return card;
     }
 
 }
