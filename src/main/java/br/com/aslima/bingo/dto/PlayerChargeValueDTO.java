@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class PlayerChargeValueDto {
+public class PlayerChargeValueDTO {
 
     private Integer id;
     private Double value;

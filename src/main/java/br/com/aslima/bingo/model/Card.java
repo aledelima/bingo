@@ -22,11 +22,11 @@ public class Card {
     @ManyToOne
     @JsonBackReference
     private Player player;
-    @ManyToMany
-    private List<Ball> balls = new ArrayList<>();
 //    private Map<Integer, Ball> balls = new HashMap<>();
     private Integer ballsFulfilled = 0;
     private Boolean fulfilled = false;
+    @ManyToMany
+    private List<Ball> balls = new ArrayList<>();
 
     public Card(Bingo bingo, Player player) {
         this.bingo = bingo;

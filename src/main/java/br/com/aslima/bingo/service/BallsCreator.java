@@ -12,7 +12,7 @@ public class BallsCreator {
 
     Bingo bingo;
 
-    public Map<Integer, Ball> createBalls(Bingo bingo) {
+    public Map<Integer, Ball> createBalls() {
 
         this.bingo = bingo;
 

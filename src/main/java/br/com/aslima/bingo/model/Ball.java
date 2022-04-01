@@ -1,16 +1,14 @@
 package br.com.aslima.bingo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Ball {
@@ -18,7 +16,7 @@ public class Ball {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Integer id;
+    private Long id;
     private Integer number;
     private Boolean drawn;
     private Integer sequence;

@@ -15,42 +15,26 @@ import java.util.Map;
 
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 public class Bingo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     private Integer id;
-    @Getter
-    @Setter
     private LocalDate date;
-    @Getter
-    @Setter
     private String description;
-    @Getter
-    @Setter
     private BigDecimal ticketPrice;
-    @Getter
-    @Setter
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToMany
     private List<Player> players = new ArrayList<>();
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @Getter
-    @Setter
     private Map<Integer, Ball> balls = new HashMap<>();
     @OneToMany(mappedBy = "bingo")
     @JsonManagedReference
-    @Getter
-    @Setter
     private List<Card> cards = new ArrayList<>();
-    @Getter
-    @Setter
     private Integer ballSequence = 0;
-    @Getter
-    @Setter
     @JsonManagedReference
     @ManyToMany
     private List<Player> winners = new ArrayList<>();
@@ -61,7 +45,7 @@ public class Bingo {
         this.description = description;
         this.ticketPrice = ticketPrice;
         BallsCreator ballsCreator = new BallsCreator(this);
-        balls = ballsCreator.createBalls(this);
+        balls = ballsCreator.createBalls();
     }
 
     public Map<Integer, Ball> updateDrawnBalls(Ball shaffledBall, Integer sequence) {

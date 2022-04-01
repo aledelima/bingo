@@ -2,8 +2,8 @@ package br.com.aslima.bingo.service;
 
 import br.com.aslima.bingo.model.Player;
 import br.com.aslima.bingo.repository.PlayerRepository;
+import br.com.aslima.bingo.service.exceptions.ObjectNotFoundException;
 import lombok.AllArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ public class PlayerService {
 
     public Player findById(Integer id) {
         return playerRepo.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(Player.class, "Object not found. Id: " + id));
+                .orElseThrow(() -> new ObjectNotFoundException("Object not found. Id: " + id));
     }
 
     public List<Player> listAll() {

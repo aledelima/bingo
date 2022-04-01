@@ -2,13 +2,10 @@ package br.com.aslima.bingo.service;
 
 import br.com.aslima.bingo.model.Ball;
 import br.com.aslima.bingo.model.Bingo;
-import br.com.aslima.bingo.model.Card;
-import br.com.aslima.bingo.model.Player;
 import br.com.aslima.bingo.model.enums.Status;
 import br.com.aslima.bingo.repository.BingoRepository;
-import br.com.aslima.bingo.repository.CardRepository;
+import br.com.aslima.bingo.service.exceptions.ObjectNotFoundException;
 import lombok.AllArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +15,10 @@ import java.util.List;
 public class BingoService {
 
     private BingoRepository bingoRepo;
-    private CardRepository cardRepo;
-    private PlayerService playerService;
 
     public Bingo findById(Integer id) {
         return bingoRepo.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(Bingo.class, "Object not found. Id: " + id));
+                .orElseThrow(() -> new ObjectNotFoundException("Object not found. Id: " + id));
     }
 
     public List<Bingo> listAll() {
@@ -35,36 +30,21 @@ public class BingoService {
         return bingoRepo.save(bingo);
     }
 
+    public Ball raffleBall(Integer bingoId) {
+        Bingo bingo = findById(bingoId);
+        return (new BallsRaffle(bingo)).raffleBall();
+    }
+
     public Ball raffle(Integer bingoId) {
         Bingo bingo = findById(bingoId);
         Ball raffledBall = (new BallsRaffle(bingo)).raffleBall();
-        bingo.setBallSequence(bingo.getBallSequence()+1);
-        raffledBall.setSequence(bingo.getBallSequence());
-//        BallsRaffle raffle = new BallsRaffle(bingo);
-//        Integer number = raffledBall.getNumber();
-        bingo.updateDrawnBalls(raffledBall, bingo.getBallSequence());
+        int seq = bingo.getBallSequence()+1;
+        bingo.setBallSequence(seq);
+        raffledBall.setSequence(seq);
+        raffledBall.setDrawn(true);
         bingo.fulfillCards(raffledBall);
         bingoRepo.save(bingo);
         return raffledBall;
-    }
-
-    public Card purchaseCard(Integer bingoId, Integer playerId) {
-        Bingo bingo = this.findById(bingoId);
-        Player player = playerService.findById(playerId);
-
-        //Checks if there's anough money to buy the new ticket
-        if (player.getMoney().compareTo(bingo.getTicketPrice())==-1)
-            throw new IllegalArgumentException("Not enough balance available.");
-
-        CardCreator cardCreator = new CardCreator(bingo, player);
-        Card card = cardCreator.createCardBalls();
-        card = cardRepo.save(card);
-
-        //Subtract ticket price from player balance
-        player.setMoney(player.getMoney().subtract(bingo.getTicketPrice()));
-//        player.addCard(card);
-        playerService.update(player);
-        return card;
     }
 
 }

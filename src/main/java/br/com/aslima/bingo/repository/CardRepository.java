@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CardRepository extends JpaRepository<Card, Integer> {
-//    List<Card> findByBingo(Bingo bingo);
+public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findCardsByBingo(Bingo bingo);
     List<Card> findCardsByPlayer(Player bingo);
-//    List<Card> findByPlayer(Player player);
+    List<Card> findCardsByBingoAndPlayer(Bingo bingo, Player player);
 }
